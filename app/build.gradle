@@ -1,0 +1,53 @@
+apply plugin: 'com.android.application'
+
+android {
+    useLibrary 'org.apache.http.legacy'
+
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "com.ucweb.union.ads.sample"
+        minSdkVersion 14
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('ucunion.keystore')
+            storePassword 'ucunion'
+            keyAlias 'ucunion.keystore'
+            keyPassword 'ucunion'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:23.+'
+
+    // Union Ads Sdk
+    compile 'com.ucweb.union.ads:unionads:2.2.+'
+
+    // Facebook Ad Sdk
+    compile 'com.facebook.android:audience-network-sdk:4.10.+'
+
+    // Google AdMob Sdk
+    compile 'com.google.android.gms:play-services-ads:8.4.+'
+
+    testCompile 'junit:junit:4.12'
+}

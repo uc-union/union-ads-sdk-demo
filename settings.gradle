@@ -1,0 +1,5 @@
+// settings.gradle
+
+rootProject.name = 'union-ads-sdk-demo'
+
+include ':app'

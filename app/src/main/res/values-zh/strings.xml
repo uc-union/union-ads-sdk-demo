@@ -1,0 +1,10 @@
+<resources>
+    <string name="ad_start_loading">开始加载广告&#8230;</string>
+    <string name="ad_load_success">加载广告成功</string>
+    <string name="ad_clicked">广告被点击</string>
+    <string name="ad_load_error">广告加载错误: %s</string>
+    <string name="ad_closed">广告关闭</string>
+    <string name="ad_showed">广告展示</string>
+    <string name="load">加载</string>
+    <string name="show">展示</string>
+</resources>
