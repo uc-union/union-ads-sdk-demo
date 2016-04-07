@@ -131,6 +131,16 @@ public class NativeFragment extends Fragment {
         mBtnShow.setVisibility(View.INVISIBLE);
 
         NativeAdAssets assets = mNativeAd.getNativeAdAssets();
+        if (assets == null) {
+          // Usually this won't happen here.
+          mTvStatus.setText(getString(R.string.ad_load_error, "Invalid native ad assets"));
+          return;
+        }
+        /**
+         * This is only an example for how to layout native ad assets.
+         * Developer should follow their own design and handle all the unexpected situation,
+         * such as no icon or cover.
+         */
         // icon
         {
           NativeAdAssets.Image icon = assets.getIcon();
