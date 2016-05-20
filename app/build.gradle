@@ -41,10 +41,10 @@ dependencies {
     compile 'com.android.support:support-v4:23.+'
 
     // Union Ads Sdk
-    compile 'com.ucweb.union.ads:unionads:2.2.+'
+    compile 'com.ucweb.union.ads:unionads:2.3.+'
 
     // Facebook Ad Sdk
-    compile 'com.facebook.android:audience-network-sdk:4.10.+'
+    compile 'com.facebook.android:audience-network-sdk:4.11.+'
 
     // Google AdMob Sdk
     compile 'com.google.android.gms:play-services-ads:8.4.+'

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.ucweb.union.ads.UnionAd;
 public class BannerFragment extends Fragment {
   private BannerAdView mBannerAdView;
   private FrameLayout mContentContainer;
+  private LinearLayout mTopContainer;
   private Button mBtnLoad;
   private TextView mTvStatus;
 
@@ -45,21 +47,25 @@ public class BannerFragment extends Fragment {
     mBtnLoad.setText(getString(R.string.load));
 
     mTvStatus = new TextView(getActivity());
-    mTvStatus.setText(getString(R.string.ad_start_loading));
     mTvStatus.setGravity(Gravity.CENTER);
-    mTvStatus.setVisibility(View.INVISIBLE);
+
+    mTopContainer = new LinearLayout(getActivity());
+    {
+      mTopContainer.setOrientation(LinearLayout.VERTICAL);
+      mTopContainer.addView(mBtnLoad);
+      mTopContainer.addView(mTvStatus);
+    }
   }
 
   private void initAction() {
     mBtnLoad.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        mBtnLoad.setVisibility(View.INVISIBLE);
+        mBtnLoad.setEnabled(false);
+        mTvStatus.setText(getString(R.string.ad_start_loading));
 
         AdRequest request = AdRequest.newBuilder().pub(PUB).build();
         mBannerAdView.loadAd(request);
-
-        mTvStatus.setVisibility(View.VISIBLE);
       }
     });
   }
@@ -73,14 +79,11 @@ public class BannerFragment extends Fragment {
     mContentContainer.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                                                  ViewGroup.LayoutParams.MATCH_PARENT));
 
-    mContentContainer.addView(mTvStatus,
+    mContentContainer.addView(mTopContainer,
                               new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                                                            FrameLayout.LayoutParams.WRAP_CONTENT,
                                                            Gravity.TOP));
-    mContentContainer.addView(mBtnLoad,
-                              new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                                                           FrameLayout.LayoutParams.WRAP_CONTENT,
-                                                           Gravity.CENTER));
+
     mContentContainer.addView(mBannerAdView,
                               new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                                                            FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -98,6 +101,8 @@ public class BannerFragment extends Fragment {
 
   @Override
   public void onDestroy() {
+    mTopContainer.removeAllViews();
+    mTopContainer = null;
     mBannerAdView = null;
     super.onDestroy();
   }
@@ -118,6 +123,7 @@ public class BannerFragment extends Fragment {
     @Override
     public void onAdShowed(UnionAd unionAd) {
       if (unionAd == mBannerAdView) {
+        mBtnLoad.setEnabled(true);
         mTvStatus.setText(getString(R.string.ad_showed));
       }
     }

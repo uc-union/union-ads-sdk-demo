@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.ucweb.union.ads.UnionAd;
 public class InterstitialFragment extends Fragment {
   private InterstitialAd mInterstitialAd;
   private FrameLayout mContentContainer;
+  private LinearLayout mTopContainer;
   private Button mBtnLoad;
   private Button mBtnShow;
   private TextView mTvStatus;
@@ -47,31 +49,39 @@ public class InterstitialFragment extends Fragment {
 
     mBtnShow = new Button(getActivity());
     mBtnShow.setText(getString(R.string.show));
-    mBtnShow.setVisibility(View.INVISIBLE);
+    mBtnShow.setEnabled(false);
 
     mTvStatus = new TextView(getActivity());
-    mTvStatus.setText(getString(R.string.ad_start_loading));
     mTvStatus.setGravity(Gravity.CENTER);
-    mTvStatus.setVisibility(View.INVISIBLE);
+
+    mTopContainer = new LinearLayout(getActivity());
+    {
+      mTopContainer.setOrientation(LinearLayout.VERTICAL);
+      mTopContainer.addView(mBtnLoad);
+      mTopContainer.addView(mBtnShow);
+      mTopContainer.addView(mTvStatus);
+    }
   }
 
   private void initAction() {
     mBtnLoad.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        mBtnLoad.setVisibility(View.INVISIBLE);
+        mBtnLoad.setEnabled(false);
+        mBtnShow.setEnabled(false);
+        mTvStatus.setText(getString(R.string.ad_start_loading));
 
         AdRequest request = AdRequest.newBuilder().pub(PUB).build();
         mInterstitialAd.loadAd(request);
-
-        mTvStatus.setVisibility(View.VISIBLE);
       }
     });
 
     mBtnShow.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        mBtnShow.setVisibility(View.INVISIBLE);
+        mBtnLoad.setEnabled(true);
+        mBtnShow.setEnabled(false);
+
         mInterstitialAd.show();
       }
     });
@@ -86,19 +96,10 @@ public class InterstitialFragment extends Fragment {
     mContentContainer.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                                                  ViewGroup.LayoutParams.MATCH_PARENT));
 
-    mContentContainer.addView(mTvStatus,
+    mContentContainer.addView(mTopContainer,
                               new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                                                            FrameLayout.LayoutParams.WRAP_CONTENT,
                                                            Gravity.TOP));
-
-    mContentContainer.addView(mBtnLoad,
-                              new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                                                           FrameLayout.LayoutParams.WRAP_CONTENT,
-                                                           Gravity.CENTER));
-    mContentContainer.addView(mBtnShow,
-                              new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                                                           FrameLayout.LayoutParams.WRAP_CONTENT,
-                                                           Gravity.CENTER));
 
     return mContentContainer;
   }
@@ -112,6 +113,8 @@ public class InterstitialFragment extends Fragment {
 
   @Override
   public void onDestroy() {
+    mTopContainer.removeAllViews();
+    mTopContainer = null;
     mInterstitialAd = null;
     super.onDestroy();
   }
@@ -120,6 +123,7 @@ public class InterstitialFragment extends Fragment {
     @Override
     public void onAdLoaded(UnionAd unionAd) {
       if (unionAd == mInterstitialAd) {
+        mBtnShow.setEnabled(true);
         mTvStatus.setText(getString(R.string.ad_load_success));
         mBtnShow.setVisibility(View.VISIBLE);
       }

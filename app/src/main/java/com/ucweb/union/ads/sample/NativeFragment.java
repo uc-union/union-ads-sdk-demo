@@ -21,13 +21,16 @@ import com.ucweb.union.ads.AdError;
 import com.ucweb.union.ads.AdListener;
 import com.ucweb.union.ads.AdRequest;
 import com.ucweb.union.ads.ImageDownloader;
+import com.ucweb.union.ads.ImageFilter;
 import com.ucweb.union.ads.NativeAd;
 import com.ucweb.union.ads.NativeAdAssets;
 import com.ucweb.union.ads.UnionAd;
 
 public class NativeFragment extends Fragment {
+  private static final String TAG = "NativeFragment";
   private NativeAd mNativeAd;
   private FrameLayout mContentContainer;
+  private LinearLayout mTopContainer;
   private Button mBtnLoad;
   private Button mBtnShow;
   private TextView mTvStatus;
@@ -61,12 +64,18 @@ public class NativeFragment extends Fragment {
 
     mBtnShow = new Button(getActivity());
     mBtnShow.setText(getString(R.string.show));
-    mBtnShow.setVisibility(View.INVISIBLE);
+    mBtnShow.setEnabled(false);
 
     mTvStatus = new TextView(getActivity());
-    mTvStatus.setText(getString(R.string.ad_start_loading));
     mTvStatus.setGravity(Gravity.CENTER);
-    mTvStatus.setVisibility(View.INVISIBLE);
+
+    mTopContainer = new LinearLayout(getActivity());
+    {
+      mTopContainer.setOrientation(LinearLayout.VERTICAL);
+      mTopContainer.addView(mBtnLoad);
+      mTopContainer.addView(mBtnShow);
+      mTopContainer.addView(mTvStatus);
+    }
 
     mNativeAssetsContainer = new LinearLayout(getActivity());
     mNativeAssetsContainer.setOrientation(LinearLayout.VERTICAL);
@@ -116,19 +125,20 @@ public class NativeFragment extends Fragment {
     mBtnLoad.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        mBtnLoad.setVisibility(View.INVISIBLE);
+        mBtnLoad.setEnabled(false);
+        mBtnShow.setEnabled(false);
+        mTvStatus.setText(getString(R.string.ad_start_loading));
 
         AdRequest request = AdRequest.newBuilder().pub(PUB).build();
         mNativeAd.loadAd(request);
-
-        mTvStatus.setVisibility(View.VISIBLE);
       }
     });
 
     mBtnShow.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        mBtnShow.setVisibility(View.INVISIBLE);
+        mBtnLoad.setEnabled(true);
+        mBtnShow.setEnabled(false);
 
         NativeAdAssets assets = mNativeAd.getNativeAdAssets();
         if (assets == null) {
@@ -155,7 +165,7 @@ public class NativeFragment extends Fragment {
         }
         // cover
         {
-          NativeAdAssets.Image cover = assets.getCover();
+          NativeAdAssets.Image cover = ImageFilter.filter(assets.getCovers(), 480, 320);
           BitmapDrawable fallback = new BitmapDrawable(getResources(),
                                                        BitmapFactory.decodeResource(getResources(),
                                                                                     R.drawable.cover_stub));
@@ -184,19 +194,10 @@ public class NativeFragment extends Fragment {
     mContentContainer.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                                                  ViewGroup.LayoutParams.MATCH_PARENT));
 
-    mContentContainer.addView(mTvStatus,
+    mContentContainer.addView(mTopContainer,
                               new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                                                            FrameLayout.LayoutParams.WRAP_CONTENT,
                                                            Gravity.TOP));
-
-    mContentContainer.addView(mBtnLoad,
-                              new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                                                           FrameLayout.LayoutParams.WRAP_CONTENT,
-                                                           Gravity.CENTER));
-    mContentContainer.addView(mBtnShow,
-                              new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                                                           FrameLayout.LayoutParams.WRAP_CONTENT,
-                                                           Gravity.CENTER));
 
     mContentContainer.addView(mNativeAssetsContainer,
                               new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
@@ -215,6 +216,8 @@ public class NativeFragment extends Fragment {
 
   @Override
   public void onDestroy() {
+    mTopContainer.removeAllViews();
+    mTopContainer = null;
     mNativeAd = null;
     super.onDestroy();
   }
@@ -223,8 +226,8 @@ public class NativeFragment extends Fragment {
     @Override
     public void onAdLoaded(UnionAd unionAd) {
       if (unionAd == mNativeAd) {
+        mBtnShow.setEnabled(true);
         mTvStatus.setText(getString(R.string.ad_load_success));
-        mBtnShow.setVisibility(View.VISIBLE);
       }
     }
 
