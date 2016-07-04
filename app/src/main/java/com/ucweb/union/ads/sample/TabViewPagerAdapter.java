@@ -22,6 +22,9 @@ public class TabViewPagerAdapter extends FragmentPagerAdapter {
       case 2:
         f = new NativeFragment();
         break;
+      case 3:
+        f = new VideoFragment();
+        break;
       default:
         break;
     }
@@ -30,6 +33,6 @@ public class TabViewPagerAdapter extends FragmentPagerAdapter {
 
   @Override
   public int getCount() {
-    return 3;
+    return 4;
   }
 }

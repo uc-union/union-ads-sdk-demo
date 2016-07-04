@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_name">UnionAdsSdkSampleDemo</string>
     <string name="ad_start_loading">开始加载广告&#8230;</string>
     <string name="ad_load_success">加载广告成功</string>
     <string name="ad_clicked">广告被点击</string>
@@ -7,4 +8,5 @@
     <string name="ad_showed">广告展示</string>
     <string name="load">加载</string>
     <string name="show">展示</string>
+    <string name="app_star">&#9733; %.1f</string>
 </resources>

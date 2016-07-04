@@ -41,7 +41,7 @@ dependencies {
     compile 'com.android.support:support-v4:23.+'
 
     // Union Ads Sdk
-    compile 'com.ucweb.union.ads:unionads:2.3.+'
+    compile 'com.ucweb.union.ads:unionads:2.4.+'
 
     // Facebook Ad Sdk
     compile 'com.facebook.android:audience-network-sdk:4.11.+'
@@ -50,4 +50,11 @@ dependencies {
     compile 'com.google.android.gms:play-services-ads:8.4.+'
 
     testCompile 'junit:junit:4.12'
+
+    // Vungle
+    compile 'com.vungle:vungle-ads:3.3.4'
+    // AdColony
+    compile 'com.jirbo.adcolony:adcolony-ads:2.3.5'
+    // Unity
+    compile 'com.unity3d.ads:unity-ads:1.5.8'
 }

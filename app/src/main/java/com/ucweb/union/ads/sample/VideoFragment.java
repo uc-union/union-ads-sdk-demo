@@ -9,51 +9,58 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ucweb.union.ads.AdError;
 import com.ucweb.union.ads.AdListener;
 import com.ucweb.union.ads.AdRequest;
-import com.ucweb.union.ads.BannerAdView;
+import com.ucweb.union.ads.InterstitialAd;
 import com.ucweb.union.ads.UnionAd;
 
-public class BannerFragment extends Fragment {
-  private BannerAdView mBannerAdView;
-  private RelativeLayout mContentContainer;
-  private FrameLayout mBannerContainer;
+public class VideoFragment extends Fragment {
+  private InterstitialAd mInterstitialAd;
+  private FrameLayout mContentContainer;
+  private LinearLayout mTopContainer;
   private Button mBtnLoad;
+  private Button mBtnShow;
   private TextView mTvStatus;
 
   /**
    * You should use your own **PUB** in production
    */
-  private static final String PUB = "ssr@debugbanner";
+  private static final String PUB = "ssr@debugvideo";
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    mInterstitialAd = new InterstitialAd(getActivity());
+    mInterstitialAd.setAdListener(mAdListener);
+
+    initView();
+    initAction();
   }
 
   private void initView() {
-    mContentContainer = (RelativeLayout) LayoutInflater.from(getActivity())
-                                                       .inflate(R.layout.banner_fragment_content_layout,
-                                                                null,
-                                                                false);
-    mBtnLoad = (Button) mContentContainer.findViewById(R.id.button);
+    mBtnLoad = new Button(getActivity());
     mBtnLoad.setText(getString(R.string.load));
 
-    mTvStatus = (TextView) mContentContainer.findViewById(R.id.status_text);
+    mBtnShow = new Button(getActivity());
+    mBtnShow.setText(getString(R.string.show));
+    mBtnShow.setEnabled(false);
 
-    // Setup Banner Ad View
-    mBannerContainer = (FrameLayout) mContentContainer.findViewById(R.id.fl_banner_container);
-    mBannerAdView = new BannerAdView(getActivity());
-    mBannerAdView.setAdListener(mAdListener);
-    mBannerContainer.addView(mBannerAdView,
-                             new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                                                          FrameLayout.LayoutParams.WRAP_CONTENT,
-                                                          Gravity.BOTTOM));
+    mTvStatus = new TextView(getActivity());
+    mTvStatus.setGravity(Gravity.CENTER);
+
+    mTopContainer = new LinearLayout(getActivity());
+    {
+      mTopContainer.setOrientation(LinearLayout.VERTICAL);
+      mTopContainer.addView(mBtnLoad);
+      mTopContainer.addView(mBtnShow);
+      mTopContainer.addView(mTvStatus);
+    }
   }
 
   private void initAction() {
@@ -61,11 +68,21 @@ public class BannerFragment extends Fragment {
       @Override
       public void onClick(View v) {
         mBtnLoad.setEnabled(false);
+        mBtnShow.setEnabled(false);
         mTvStatus.setText(getString(R.string.ad_start_loading));
 
-        // Load Banner Ad
         AdRequest request = AdRequest.newBuilder().pub(PUB).build();
-        mBannerAdView.loadAd(request);
+        mInterstitialAd.loadAd(request);
+      }
+    });
+
+    mBtnShow.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        mBtnLoad.setEnabled(true);
+        mBtnShow.setEnabled(false);
+
+        mInterstitialAd.show();
       }
     });
   }
@@ -75,8 +92,15 @@ public class BannerFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater,
                            ViewGroup container,
                            Bundle savedInstanceState) {
-    initView();
-    initAction();
+    mContentContainer = new FrameLayout(getActivity());
+    mContentContainer.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                                                 ViewGroup.LayoutParams.MATCH_PARENT));
+
+    mContentContainer.addView(mTopContainer,
+                              new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                                                           FrameLayout.LayoutParams.WRAP_CONTENT,
+                                                           Gravity.TOP));
+
     return mContentContainer;
   }
 
@@ -89,41 +113,46 @@ public class BannerFragment extends Fragment {
 
   @Override
   public void onDestroy() {
-    mBannerAdView = null;
+    mTopContainer.removeAllViews();
+    mTopContainer = null;
+    mInterstitialAd = null;
     super.onDestroy();
   }
 
   private final AdListener mAdListener = new AdListener() {
     @Override
     public void onAdLoaded(UnionAd unionAd) {
-      if (unionAd == mBannerAdView) {
+      if (unionAd == mInterstitialAd) {
+        mBtnShow.setEnabled(true);
         mTvStatus.setText(getString(R.string.ad_load_success));
+        mBtnShow.setVisibility(View.VISIBLE);
       }
     }
 
     @Override
     public void onAdClosed(UnionAd unionAd) {
-
+      if (unionAd == mInterstitialAd) {
+        mTvStatus.setText(getString(R.string.ad_closed));
+      }
     }
 
     @Override
     public void onAdShowed(UnionAd unionAd) {
-      if (unionAd == mBannerAdView) {
-        mBtnLoad.setEnabled(true);
+      if (unionAd == mInterstitialAd) {
         mTvStatus.setText(getString(R.string.ad_showed));
       }
     }
 
     @Override
     public void onAdClicked(UnionAd unionAd) {
-      if (unionAd == mBannerAdView) {
+      if (unionAd == mInterstitialAd) {
         Toast.makeText(getActivity(), getString(R.string.ad_clicked), Toast.LENGTH_SHORT).show();
       }
     }
 
     @Override
     public void onAdError(UnionAd unionAd, AdError adError) {
-      if (unionAd == mBannerAdView) {
+      if (unionAd == mInterstitialAd) {
         mTvStatus.setText(getString(R.string.ad_load_error, adError.getErrorMessage()));
       }
     }

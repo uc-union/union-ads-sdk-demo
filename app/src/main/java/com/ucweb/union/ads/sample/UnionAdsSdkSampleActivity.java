@@ -14,7 +14,7 @@ public class UnionAdsSdkSampleActivity extends FragmentActivity implements Actio
   private TabViewPagerAdapter mViewPagerAdapter;
   private ActionBar mActionBar;
 
-  private String[] mTagNameArray = {"Banner", "Interstitial", "Native"};
+  private String[] mTagNameArray = {"Banner", "Interstitial", "Native", "Video"};
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
