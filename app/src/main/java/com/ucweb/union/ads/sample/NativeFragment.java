@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ucweb.union.ads.Ad;
 import com.ucweb.union.ads.AdError;
 import com.ucweb.union.ads.AdListener;
 import com.ucweb.union.ads.AdRequest;
@@ -24,7 +25,6 @@ import com.ucweb.union.ads.ImageDownloader;
 import com.ucweb.union.ads.ImageFilter;
 import com.ucweb.union.ads.NativeAd;
 import com.ucweb.union.ads.NativeAdAssets;
-import com.ucweb.union.ads.UnionAd;
 
 public class NativeFragment extends Fragment {
   private static final String TAG = "NativeFragment";
@@ -224,34 +224,34 @@ public class NativeFragment extends Fragment {
 
   private final AdListener mAdListener = new AdListener() {
     @Override
-    public void onAdLoaded(UnionAd unionAd) {
-      if (unionAd == mNativeAd) {
+    public void onAdLoaded(Ad ad) {
+      if (ad == mNativeAd) {
         mBtnShow.setEnabled(true);
         mTvStatus.setText(getString(R.string.ad_load_success));
       }
     }
 
     @Override
-    public void onAdClosed(UnionAd unionAd) {
+    public void onAdClosed(Ad ad) {
     }
 
     @Override
-    public void onAdShowed(UnionAd unionAd) {
-      if (unionAd == mNativeAd) {
+    public void onAdShowed(Ad ad) {
+      if (ad == mNativeAd) {
         mTvStatus.setText(getString(R.string.ad_showed));
       }
     }
 
     @Override
-    public void onAdClicked(UnionAd unionAd) {
-      if (unionAd == mNativeAd) {
+    public void onAdClicked(Ad ad) {
+      if (ad == mNativeAd) {
         Toast.makeText(getActivity(), getString(R.string.ad_clicked), Toast.LENGTH_SHORT).show();
       }
     }
 
     @Override
-    public void onAdError(UnionAd unionAd, AdError adError) {
-      if (unionAd == mNativeAd) {
+    public void onAdError(Ad ad, AdError adError) {
+      if (ad == mNativeAd) {
         mTvStatus.setText(getString(R.string.ad_load_error, adError.getErrorMessage()));
       }
     }

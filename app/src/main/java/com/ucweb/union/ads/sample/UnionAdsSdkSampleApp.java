@@ -9,6 +9,6 @@ public class UnionAdsSdkSampleApp extends Application {
   public void onCreate() {
     super.onCreate();
 
-    UnionAdsSdk.start(this);
+    UnionAdsSdk.start(this, "2df71166b3968e3e69914264b60757e6");
   }
 }
