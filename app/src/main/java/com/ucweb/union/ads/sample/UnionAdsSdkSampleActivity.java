@@ -11,7 +11,7 @@ import android.widget.FrameLayout;
 public class UnionAdsSdkSampleActivity extends FragmentActivity implements ActionBar.TabListener {
 
   private ViewPager mViewPager;
-  private TabViewPagerAdapter mViewPagerAdapter;
+  private UnionFragmentPagerAdapter mViewPagerAdapter;
   private ActionBar mActionBar;
 
   private String[] mTagNameArray = {"Banner", "Interstitial", "Native", "Video"};
@@ -20,7 +20,7 @@ public class UnionAdsSdkSampleActivity extends FragmentActivity implements Actio
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    mViewPagerAdapter = new TabViewPagerAdapter(getSupportFragmentManager());
+    mViewPagerAdapter = new UnionFragmentPagerAdapter(getSupportFragmentManager());
 
     mViewPager = new ViewPager(this);
     mViewPager.setId(R.id.main_view_pager);
