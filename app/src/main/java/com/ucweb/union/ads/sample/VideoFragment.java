@@ -153,6 +153,8 @@ public class VideoFragment extends Fragment {
     @Override
     public void onAdError(Ad ad, AdError adError) {
       if (ad == mInterstitialAd) {
+        mBtnLoad.setEnabled(true);
+        mBtnShow.setEnabled(false);
         mTvStatus.setText(getString(R.string.ad_load_error, adError.getErrorMessage()));
       }
     }

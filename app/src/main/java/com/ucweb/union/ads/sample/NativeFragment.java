@@ -165,7 +165,7 @@ public class NativeFragment extends Fragment {
         }
         // cover
         {
-          NativeAdAssets.Image cover = ImageFilter.filter(assets.getCovers(), 480, 320);
+          NativeAdAssets.Image cover = ImageFilter.filter(assets.getCovers(), 600, 314);
           BitmapDrawable fallback = new BitmapDrawable(getResources(),
                                                        BitmapFactory.decodeResource(getResources(),
                                                                                     R.drawable.cover_stub));
@@ -252,6 +252,8 @@ public class NativeFragment extends Fragment {
     @Override
     public void onAdError(Ad ad, AdError adError) {
       if (ad == mNativeAd) {
+        mBtnLoad.setEnabled(true);
+        mBtnShow.setEnabled(false);
         mTvStatus.setText(getString(R.string.ad_load_error, adError.getErrorMessage()));
       }
     }
