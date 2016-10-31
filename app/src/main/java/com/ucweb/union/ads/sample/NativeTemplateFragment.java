@@ -77,7 +77,6 @@ public class NativeTemplateFragment extends Fragment {
                                                 .build();
         AdRequest request = AdRequest.newBuilder()
                                      .pub(PUB)
-                                     .testDeviceId("2fd9c58504b50fa1173a33bfedb896ee")
                                      .withOption(option)
                                      .build();
         mNativeTemplateAd.loadAd(request);
