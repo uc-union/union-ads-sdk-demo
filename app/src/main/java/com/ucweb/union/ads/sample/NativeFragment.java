@@ -31,6 +31,7 @@ public class NativeFragment extends Fragment {
   private NativeAd mNativeAd;
   private FrameLayout mContentContainer;
   private LinearLayout mTopContainer;
+  private FrameLayout mAdMarkContainer;
   private Button mBtnLoad;
   private Button mBtnShow;
   private TextView mTvStatus;
@@ -118,6 +119,7 @@ public class NativeFragment extends Fragment {
       mNativeAssetsContainer.addView(mIvCover,
                                      new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                                                                    LinearLayout.LayoutParams.WRAP_CONTENT));
+      mAdMarkContainer = new FrameLayout(getContext());
     }
   }
 
@@ -181,6 +183,7 @@ public class NativeFragment extends Fragment {
         mNativeAd.registerViewForInteraction(mNativeAssetsContainer, mBtnCTA);
 
         mNativeAssetsContainer.setVisibility(View.VISIBLE);
+        mAdMarkContainer.addView(mNativeAd.getNativeAdAssets().getAdMarkView());
       }
     });
   }
@@ -203,6 +206,10 @@ public class NativeFragment extends Fragment {
                               new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                                                            FrameLayout.LayoutParams.WRAP_CONTENT,
                                                            Gravity.BOTTOM));
+    mContentContainer.addView(mAdMarkContainer,
+                              new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
+                                                           FrameLayout.LayoutParams.WRAP_CONTENT,
+                                                           Gravity.BOTTOM | Gravity.RIGHT));
 
     return mContentContainer;
   }

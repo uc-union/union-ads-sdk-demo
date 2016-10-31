@@ -25,6 +25,9 @@ public class UnionFragmentPagerAdapter extends FragmentPagerAdapter {
       case 3:
         f = new VideoFragment();
         break;
+      case 4:
+        f = new NativeTemplateFragment();
+        break;
       default:
         break;
     }
@@ -33,6 +36,6 @@ public class UnionFragmentPagerAdapter extends FragmentPagerAdapter {
 
   @Override
   public int getCount() {
-    return 4;
+    return 5;
   }
 }
